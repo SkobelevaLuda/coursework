@@ -1,5 +1,6 @@
 package servise;
 
+import exception.TaskNotFoundException;
 import task.Task1;
 
 import java.time.LocalDate;
@@ -31,7 +32,7 @@ public class TaskServise {
                     taskByDay.add(task1);
                     break;
                 }
-                nextDateTime= task1.getRepiatability().nexTime(nextDateTime)
+                nextDateTime= task1.getRepiatability().nexTime(nextDateTime);
             }while (nextDateTime.toLocalDate().isBefore(day));
         }
 
@@ -39,7 +40,9 @@ public class TaskServise {
 
 
     }
-    public static void remove (Task1 task1){
-        TASKS.put(task1.getId(),task1);
-
+    public static void removeById (int id) throws TaskNotFoundException {
+        if (TASKS.remove(id)==null){
+            throw new TaskNotFoundException(id);
+        }
+    }
 }
