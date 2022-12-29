@@ -98,5 +98,16 @@ public class Task1 {
         }
         this.repiatability = repiatability;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("id: ").append(id).append("\n")
+                .append("название:").append("\"").append(titel).append("\"").append("\n")
+                .append(" описание: ").append("\"").append(description).append("\"").append("\n")
+                .append(" тип: ").append(type==Type.PERSONAL? "личная ": "рабочая").append("\n")
+                .append(" дата и время: ").append(dateTime).append("\n");
+        return stringBuilder.toString();
+    }
 }
 

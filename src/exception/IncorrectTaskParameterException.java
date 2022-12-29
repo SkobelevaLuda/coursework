@@ -2,7 +2,7 @@ package exception;
 
 public class IncorrectTaskParameterException extends Exception{
 
-    private String paramrter;
+    private final String paramrter;
 
     public IncorrectTaskParameterException(String paramrter) {
         this.paramrter = paramrter;
