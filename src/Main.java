@@ -1,15 +1,22 @@
 import exception.IncorrectTaskParameterException;
+import exception.TaskNotFoundException;
 import servise.TaskServise;
 import task.*;
+import util.Constant;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import static servise.TaskServise.add;
+
 public class Main {
     private static final Pattern DATE_TIME_PATTERN=Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4} \\d{2}:\\d{2}");
+    private static final Pattern DATE_PATTERN=Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4}");
     private static final DateTimeFormatter DATE_TIME_FORMATTER=DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
@@ -24,10 +31,10 @@ public class Main {
                             inputTask(scanner);
                             break;
                         case 2:
-                            // todo: обрабатываем пункт меню 2
+                            removeTask(scanner);
                             break;
                         case 3:
-                            // todo: обрабатываем пункт меню 3
+                            printTaskByDay(scanner);
                             break;
                         case 0:
                             break label;
@@ -37,6 +44,55 @@ public class Main {
                     System.out.println("Выберите пункт меню из списка!");
                 }
             }
+        }
+
+    }
+
+    private static void printTaskByDay(Scanner scanner) {
+        try {
+            do {
+                System.out.println("Введите дату ");
+                if (scanner.hasNext(DATE_PATTERN)) {
+                    LocalDate day = parseDate(scanner.next(DATE_PATTERN));
+                    if( day==null){
+                        System.out.println(" Не корректныйформат даты! ");
+                        continue;
+                    }
+                    Collection<Task1> taskByDay =TaskServise.getTaskByDay(day);
+                    if (taskByDay.isEmpty()){
+                        System.out.println("Задачи на "+day.format(Constant.DATE_FORMATTER)+" не найдены");
+                    }else {
+                        System.out.println("Задачи на "+day.format(Constant.DATE_FORMATTER)+" : ");
+                        for (Task1 task1: taskByDay){
+                            System.out.println(task1);
+                        }
+                        break;
+                    }
+                } else {
+                    scanner.next();
+                }
+            }
+            while (true);
+        } catch (TaskNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    private static void removeTask(Scanner scanner) {
+        try {
+            do {
+                System.out.println("Введите id задачи ");
+                if (scanner.hasNextInt()) {
+                    int id = scanner.nextInt();
+                    TaskServise.removeById(id);
+                    System.out.println("Задача удалена");
+                    break;
+                    } else {
+                        scanner.next();
+                    }
+                }
+                while (true);
+            } catch (TaskNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -50,9 +106,8 @@ public class Main {
             LocalDateTime dateTime=inputDateTime(scanner);
             Repiatability repiatability=inputRepiatability(scanner);
             Task1 task1=new Task1(titel, deskription, type,dateTime,repiatability);
-            TaskServise add(task);
-            System.out.println();
-
+            add(task1);
+            System.out.println("Задача"+task1+ "добавлена. ");
         }catch (IncorrectTaskParameterException e){
             System.out.println(e.getMessage());
         }
@@ -102,7 +157,15 @@ public class Main {
     }
     private static LocalDateTime parseDateTame(String dateTime){
         try {
-            return LocalDateTime.parse(dateTime, DATE_TIME_FORMATTER);
+            return LocalDateTime.parse(dateTime, Constant.DATE_TIME_FORMATTER);
+        }catch (DateTimeParseException e){
+            return null;
+        }
+    }
+
+    private static LocalDate parseDate(String date){
+        try {
+            return LocalDate.parse(date, Constant.DATE_FORMATTER);
         }catch (DateTimeParseException e){
             return null;
         }

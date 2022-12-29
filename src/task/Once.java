@@ -8,4 +8,9 @@ public class Once implements Repiatability{
     public LocalDateTime nexTime(LocalDateTime currentDateTime) {
         return null;
     }
+
+    @Override
+    public String titel() {
+        return " однократная";
+    }
 }

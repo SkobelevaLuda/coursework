@@ -1,6 +1,7 @@
 package task;
 
 import exception.IncorrectTaskParameterException;
+import util.Constant;
 
 import java.time.LocalDateTime;
 
@@ -106,7 +107,8 @@ public class Task1 {
                 .append("название:").append("\"").append(titel).append("\"").append("\n")
                 .append(" описание: ").append("\"").append(description).append("\"").append("\n")
                 .append(" тип: ").append(type==Type.PERSONAL? "личная ": "рабочая").append("\n")
-                .append(" дата и время: ").append(dateTime).append("\n");
+                .append(" дата и время: ").append(dateTime.format(Constant.DATE_TIME_FORMATTER)).append("\n")
+                .append(" повторяемость: ").append(repiatability.titel()).append("\n");
         return stringBuilder.toString();
     }
 }

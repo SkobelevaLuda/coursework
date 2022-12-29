@@ -8,4 +8,9 @@ public class Daily implements Repiatability {
     public LocalDateTime nexTime(LocalDateTime currentDateTime) {
         return currentDateTime.plusDays(1);
     }
+
+    @Override
+    public String titel() {
+        return " ежедневная";
+    }
 }

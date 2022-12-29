@@ -13,7 +13,7 @@ public class TaskServise {
     private TaskServise(){
 
     }
-    public static void add (Task1 task1){
+    public static void add(Task1 task1){
         TASKS.put(task1.getId(),task1);
     }
     public static Collection<Task1> getTaskByDay(LocalDate localDate){
