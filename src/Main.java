@@ -17,7 +17,6 @@ import static servise.TaskServise.add;
 public class Main {
     private static final Pattern DATE_TIME_PATTERN=Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4} \\d{2}:\\d{2}");
     private static final Pattern DATE_PATTERN=Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4}");
-    private static final DateTimeFormatter DATE_TIME_FORMATTER=DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             label:
@@ -49,33 +48,29 @@ public class Main {
     }
 
     private static void printTaskByDay(Scanner scanner) {
-        try {
-            do {
-                System.out.println("Введите дату ");
-                if (scanner.hasNext(DATE_PATTERN)) {
-                    LocalDate day = parseDate(scanner.next(DATE_PATTERN));
-                    if( day==null){
-                        System.out.println(" Не корректныйформат даты! ");
-                        continue;
-                    }
-                    Collection<Task1> taskByDay =TaskServise.getTaskByDay(day);
-                    if (taskByDay.isEmpty()){
-                        System.out.println("Задачи на "+day.format(Constant.DATE_FORMATTER)+" не найдены");
-                    }else {
-                        System.out.println("Задачи на "+day.format(Constant.DATE_FORMATTER)+" : ");
-                        for (Task1 task1: taskByDay){
-                            System.out.println(task1);
-                        }
-                        break;
-                    }
-                } else {
-                    scanner.next();
+        do {
+            System.out.println("Введите дату ");
+            if (scanner.hasNext(DATE_PATTERN)) {
+                LocalDate day = parseDate(scanner.next(DATE_PATTERN));
+                if( day==null){
+                    System.out.println(" Не корректныйформат даты! ");
+                    continue;
                 }
+                Collection<Task1> taskByDay =TaskServise.getTaskByDay(day);
+                if (taskByDay.isEmpty()){
+                    System.out.println("Задачи на "+day.format(Constant.DATE_FORMATTER)+" не найдены");
+                }else {
+                    System.out.println("Задачи на "+day.format(Constant.DATE_FORMATTER)+" : ");
+                    for (Task1 task1: taskByDay){
+                        System.out.println(task1);
+                    }
+                    break;
+                }
+            } else {
+                scanner.next();
             }
-            while (true);
-        } catch (TaskNotFoundException e) {
-            System.out.println(e.getMessage());
         }
+        while (true);
     }
     private static void removeTask(Scanner scanner) {
         try {
@@ -97,20 +92,16 @@ public class Main {
     }
 
     private static void inputTask(Scanner scanner) {
-        try {
-            System.out.print("Введите название задачи: ");
-            String titel = scanner.next();
-            System.out.print("Введите описание задачи: ");
-            String deskription = scanner.next();
-            Type type= inputType(scanner);
-            LocalDateTime dateTime=inputDateTime(scanner);
-            Repiatability repiatability=inputRepiatability(scanner);
-            Task1 task1=new Task1(titel, deskription, type,dateTime,repiatability);
-            add(task1);
-            System.out.println("Задача"+task1+ "добавлена. ");
-        }catch (IncorrectTaskParameterException e){
-            System.out.println(e.getMessage());
-        }
+        System.out.print("Введите название задачи: ");
+        String titel = scanner.next();
+        System.out.print("Введите описание задачи: ");
+        String deskription = scanner.next();
+        Type type= inputType(scanner);
+        LocalDateTime dateTime=inputDateTime(scanner);
+        Repiatability repiatability=inputRepiatability(scanner);
+        Task1 task1=new Task1(titel, deskription, type,dateTime,repiatability);
+        add(task1);
+        System.out.println("Задача"+task1+ "добавлена. ");
     }
 
     private static Type inputType(Scanner scanner) {
